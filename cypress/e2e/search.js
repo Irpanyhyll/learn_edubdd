@@ -1,14 +1,21 @@
-const {Given, When, Then} = require('@badeball/cypress-cucumber-preprocessor');
 
-Given('I am on the Zero Web App Security homepage',()=>{
-    cy.visit('http://zero.webappsecurity.com/index.html');
-})
+import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import Homepage from '../pages/Homepage';
+import SearchResultsPage from '../pages/SearchResultsPage';
 
-When('I enter "online banking" in the search box',()=>{
-    cy.get('#searchTerm').type('Online Banking {enter}')
-})
+const homepage = new Homepage();
+const searchResultsPage = new SearchResultsPage();
 
-Then('I should see search results related to "online banking"',()=>{
-    cy.visit('http://zero.webappsecurity.com/search.html?searchTerm=Online Banking')
-    cy.get('h2').should('contain.text', 'Search Results:')
-})
+Given('I am on the Zero Web App Security homepage', () => {
+    homepage.visit('http://zero.webappsecurity.com/index.html');
+});
+
+When('I enter {online banking} in the search box', (searchTerm) => {
+    homepage.searchFor('Online Banking {enter}');
+});
+
+Then('I should see search results related to {string}', (searchTerm) => {
+    searchResultsPage.visitSearchResults('http://zero.webappsecurity.com/search.html?searchTerm=Online Banking'); // Mengunjungi halaman hasil pencarian
+    searchResultsPage.verifySearchResultsHeading('contain.text', 'Search Results:'); 
+});
+
